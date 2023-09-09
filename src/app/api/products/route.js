@@ -1,8 +1,22 @@
 import { NextResponse } from "next/server";
 import { coon } from "@/libs/mysql";
 
-export function GET() {
-    return NextResponse.json({ message: "Listando productos" });
+export async function GET() {
+    try {
+        const results = await coon.query("SELECT * FROM product");
+        return NextResponse.json(results);
+        
+    } catch (error) {
+        return NextResponse.json(
+
+            {
+                message: error.message,
+            },
+            {status: 500,
+            }
+        );
+        
+    }
     }
 
     
