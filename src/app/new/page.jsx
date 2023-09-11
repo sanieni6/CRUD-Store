@@ -5,8 +5,7 @@ function Page() {
 
 
     return (
-        <div>
-            <h1>New product</h1>
+        <div className="flex justify-center items-center h-full">
             <ProductForm />
         </div>
     )
