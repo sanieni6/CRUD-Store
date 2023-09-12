@@ -39,18 +39,20 @@ function ProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!params.id) {
-
-      const formData = new FormData();
+    const formData = new FormData();
       formData.append("name", product.name);
       formData.append("price", product.price);
       formData.append("description", product.description);
-      formData.append("productImage", file);
 
+      if(file) {
+        formData.append("image", file);
+      }
+
+    if (!params.id) {
       const res = await axios.post("/api/products", formData, {headers: {"Content-Type": "multipart/form-data"}});
       console.log(res);
     } else {
-      const res = await axios.put(`/api/products/${params.id}`, product);
+      const res = await axios.put(`/api/products/${params.id}`, formData, {headers: {"Content-Type": "multipart/form-data"}});
       console.log(res);
     }
     form.current.reset();

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { coon } from "@/libs/mysql";
+import { unlink } from "fs/promises";
+import cloudinary from "@/libs/cloudinary";
+import { processImage } from "@/libs/processImage";
 
 export async function GET() {
   try {
@@ -29,10 +32,19 @@ export async function POST(request) {
       );
     }
 
+    const filePath = await processImage(image);
+
+    const res = await cloudinary.uploader.upload(filePath);
+
+    if (res) {
+      await unlink(filePath);
+    }
+
     const result = await coon.query("INSERT INTO product SET ?", {
       name: data.get("name"),
       description: data.get("description"),
       price: data.get("price"),
+      image: res.secure_url,
     });
 
     return NextResponse.json({
